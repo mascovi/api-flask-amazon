@@ -23,7 +23,10 @@ def home():
 
 @app.route("/search", methods=["POST"])
 def search():
-    payload = request.get_json()
+try:
+    payload = request.get_json(force=True)
+except:
+    return jsonify({"error": "Falha ao interpretar JSON"})
     keywords = payload.get("keywords", "café")
 
     request_body = {
