@@ -15,7 +15,7 @@ ASSOCIATE_TAG = os.environ.get("AMAZON_ASSOCIATE_TAG")
 
 REGION = "us-east-1"
 SERVICE = "ProductAdvertisingAPI"
-ENDPOINT = "webservices.amazon.com.br"
+ENDPOINT = "webservices.amazon.com"
 URI = "/paapi5/searchitems"
 FULL_URL = f"https://{ENDPOINT}{URI}"
 
