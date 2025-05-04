@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import hmac
 import requests
+import traceback  # ← Adicionado corretamente no topo
 
 app = Flask(__name__)
 
@@ -84,12 +85,9 @@ def search():
         response = requests.post(FULL_URL, headers=headers, data=request_payload)
         return jsonify(response.json())
 
-    import traceback
-
-except Exception as e:
-    error_message = traceback.format_exc()
-    return jsonify({"error": "Erro interno na API", "details": error_message}), 500
-
+    except Exception as e:
+        error_message = traceback.format_exc()
+        return jsonify({"error": "Erro interno na API", "details": error_message}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
