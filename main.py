@@ -84,8 +84,12 @@ def search():
         response = requests.post(FULL_URL, headers=headers, data=request_payload)
         return jsonify(response.json())
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    import traceback
+
+except Exception as e:
+    error_message = traceback.format_exc()
+    return jsonify({"error": "Erro interno na API", "details": error_message}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
