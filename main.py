@@ -98,7 +98,16 @@ def search_items():
 
         response = requests.post(FULL_URL, headers=headers, json=payload)
 
-        return jsonify(response.json()), response.status_code
+        try:
+            return jsonify(response.json()), response.status_code
+        except Exception as decode_error:
+            return jsonify({
+                "error": "Erro ao decodificar JSON da resposta",
+                "raw_response": response.text,
+                "status_code": response.status_code,
+                "trace": traceback.format_exc()
+            }), 500
+
     except Exception as e:
         return jsonify({
             "error": "Erro interno no servidor",
