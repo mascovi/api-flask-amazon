@@ -1,3 +1,2 @@
 flask
-amazon-paapi
 python-dotenv
