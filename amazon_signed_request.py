@@ -90,7 +90,8 @@ def buscar_produtos_amazon(keyword):
     try:
         data = response.json()
         items = data.get("SearchResult", {}).get("Items", [])
-        resultados = []
+        produtos_com_promocao = []
+        produtos_sem_promocao = []
 
         for item in items:
             offers = item.get("Offers", {}).get("Listings", [])
@@ -98,18 +99,22 @@ def buscar_produtos_amazon(keyword):
                 continue
 
             savings = offers[0].get("Savings")
-            if not savings:
-                continue  # pula se não tiver promoção ativa
-
-            resultados.append({
+            produto = {
                 "titulo": item["ItemInfo"]["Title"]["DisplayValue"],
                 "preco": offers[0]["Price"]["DisplayAmount"],
-                "desconto": savings.get("DisplayAmount", ""),
+                "desconto": savings.get("DisplayAmount") if savings else None,
                 "imagem": item["Images"]["Primary"]["Medium"]["URL"],
                 "link_afiliado": item["DetailPageURL"]
-            })
+            }
 
-        return resultados
+            if savings:
+                produtos_com_promocao.append(produto)
+            else:
+                produtos_sem_promocao.append(produto)
+
+        if produtos_com_promocao:
+            return produtos_com_promocao
+        return produtos_sem_promocao
 
     except Exception as e:
         return {"erro": str(e), "resposta_bruta": response.text}
