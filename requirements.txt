@@ -1,2 +1,3 @@
 flask
-requests
+amazon-paapi
+python-dotenv
