@@ -34,9 +34,7 @@ def build_signed_headers(keyword):
         "Resources": [
             "Images.Primary.Medium",
             "ItemInfo.Title",
-            "Offers.Listings.Price",
-            "Offers.Listings.SavingBasis",
-            "Offers.Listings.Savings"
+            "Offers.Listings.Price"
         ]
     }
 
@@ -90,31 +88,21 @@ def buscar_produtos_amazon(keyword):
     try:
         data = response.json()
         items = data.get("SearchResult", {}).get("Items", [])
-        produtos_com_promocao = []
-        produtos_sem_promocao = []
+        resultados = []
 
         for item in items:
             offers = item.get("Offers", {}).get("Listings", [])
             if not offers:
                 continue
 
-            savings = offers[0].get("Savings")
-            produto = {
+            resultados.append({
                 "titulo": item["ItemInfo"]["Title"]["DisplayValue"],
                 "preco": offers[0]["Price"]["DisplayAmount"],
-                "desconto": savings.get("DisplayAmount") if savings else None,
                 "imagem": item["Images"]["Primary"]["Medium"]["URL"],
                 "link_afiliado": item["DetailPageURL"]
-            }
+            })
 
-            if savings:
-                produtos_com_promocao.append(produto)
-            else:
-                produtos_sem_promocao.append(produto)
-
-        if produtos_com_promocao:
-            return produtos_com_promocao
-        return produtos_sem_promocao
+        return resultados
 
     except Exception as e:
         return {"erro": str(e), "resposta_bruta": response.text}
